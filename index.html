@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SA Mart - Premium Wooden Products</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #e0f7fa, #f9f9f9);
+    }
+    .header {
+      text-align: center;
+      padding: 50px 0;
+      background: linear-gradient(45deg, #2e7d32, #4caf50, #2e7d32);
+      background-size: 200% 200%;
+      animation: gradientBG 5s ease infinite;
+      color: white;
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .product-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin: 30px 0;
+    }
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .product-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      transition: transform 0.3s;
+    }
+    .product-card:hover .product-img {
+      transform: scale(1.05);
+    }
+    .product-title {
+      color: #2e7d32;
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .product-price {
+      color: #e91e63;
+      font-weight: bold;
+      font-size: 1.4rem;
+      margin: 15px 0;
+    }
+    .order-btn, .quick-view-btn {
+      background: linear-gradient(45deg, #2e7d32, #4caf50);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 5px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .order-btn:hover, .quick-view-btn:hover {
+      background: linear-gradient(45deg, #1b5e20, #388e3c);
+      transform: scale(1.05);
+    }
+    .payment-form {
+      background: #f0fff0;
+      padding: 30px;
+      border-radius: 12px;
+      margin-top: 40px;
+      display: none;
+      animation: slideIn 0.5s ease-in;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: #2e7d32;
+      outline: none;
+    }
+    .submit-btn {
+      background: linear-gradient(45deg, #2e7d32, #4caf50);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .submit-btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #fff;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #25D366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 400px;
+      animation: popUp 0.3s ease-in;
+    }
+    @keyframes popUp {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-content h3 {
+      color: #2e7d32;
+      margin-bottom: 20px;
+    }
+    .modal-content button {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background: #2e7d32;
+      color: white;
+      border-radius: 10px;
+      margin-top: 40px;
+    }
+    .footer a {
+      color: #e0f7fa;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    @media (max-width: 768px) {
+      .product-container {
+        grid-template-columns: 1fr;
+      }
+      .form-group input, .form-group select {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+      .order-btn, .quick-view-btn, .submit-btn {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>SA Mart</h1>
+    <p>Premium Handmade Wooden Products</p>
+  </div>
+
+  <div class="product-container">
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Wooden+Pen+Box" class="product-img" alt="Wooden Pen Box">
+      <h3 class="product-title">Wooden Pen Box</h3>
+      <p>এক্সক্লুসিভ হ্যান্ডমেড কাঠের পেন বক্স</p>
+      <div class="product-price">৳350</div>
+      <button class="order-btn" onclick="showForm('Wooden Pen Box', 350)">অর্ডার করুন</button>
+      <button class="quick-view-btn" onclick="showQuickView('Wooden Pen Box', 350, 'এক্সক্লুসিভ হ্যান্ডমেড কাঠের পেন বক্স')">কুইক ভিউ</button>
+    </div>
+
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Quran+Storage+Box" class="product-img" alt="Quran Storage Box">
+      <h3 class="product-title">Quran Storage Box</h3>
+      <p>পবিত্র কুরআন শরীফ সংরক্ষণের জন্য কাঠের বাক্স</p>
+      <div class="product-price">৳550</div>
+      <button class="order-btn" onclick="showForm('Quran Storage Box', 550)">অর্ডার করুন</button>
+      <button class="quick-view-btn" onclick="showQuickView('Quran Storage Box', 550, 'পবিত্র কুরআন শরীফ সংরক্ষণের জন্য কাঠের বাক্স')">কুইক ভিউ</button>
+    </div>
+
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Custom+Wooden+Box" class="product-img" alt="Custom Wooden Box">
+      <h3 class="product-title">Custom Wooden Box</h3>
+      <p>আপনার পছন্দ অনুযায়ী কাস্টমাইজড কাঠের বক্স</p>
+      <div class="product-price">৳500</div>
+      <button class="order-btn" onclick="showForm('Custom Wooden Box', 500)">অর্ডার করুন</button>
+      <button class="quick-view-btn" onclick="showQuickView('Custom Wooden Box', 500, 'আপনার পছন্দ অনুযায়ী কাস্টমাইজড কাঠের বক্স')">কুইক ভিউ</button>
+    </div>
+
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Wooden+Keychain" class="product-img" alt="Wooden Keychain">
+      <h3 class="product-title">Wooden Keychain</h3>
+      <p>স্টাইলিশ হ্যান্ডমেড কাঠের কীচেন</p>
+      <div class="product-price">৳150</div>
+      <button class="order-btn" onclick="showForm('Wooden Keychain', 150)">অর্ডার করুন</button>
+      <button class="quick-view-btn" onclick="showQuickView('Wooden Keychain', 150, 'স্টাইলিশ হ্যান্ডমেড কাঠের কীচেন')">কুইক ভিউ</button>
+    </div>
+
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Wooden+Jewelry+Box" class="product-img" alt="Wooden Jewelry Box">
+      <h3 class="product-title">Wooden Jewelry Box</h3>
+      <p>মার্জিত কাঠের গয়না সংরক্ষণ বক্স</p>
+      <div class="product-price">৳700</div>
+      <button class="order-btn" onclick="showForm('Wooden Jewelry Box', 700)">অর্ডার করুন</button>
+      <button class="quick-view-btn" onclick="showQuickView('Wooden Jewelry Box', 700, 'মার্জিত কাঠের গয়না সংরক্ষণ বক্স')">কুইক ভিউ</button>
+    </div>
+
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Wooden+Wall+Art" class="product-img" alt="Wooden Wall Art">
+      <h3 class="product-title">Wooden Wall Art</h3>
+      <p>অসাধারণ কাঠের তৈরি দেয়াল সজ্জা</p>
+      <div class="product-price">৳1200</div>
+      <button class="order-btn" onclick="showForm('Wooden Wall Art', 1200)">অর্ডার করুন</button>
+      <button class="quick-view-btn" onclick="showQuickView('Wooden Wall Art', 1200, 'অসাধারণ কাঠের তৈরি দেয়াল সজ্জা')">কুইক ভিউ</button>
+    </div>
+  </div>
+
+  <div id="paymentForm" class="payment-form">
+    <h2 style="text-align:center; color:#2e7d32;">অর্ডার ফর্ম</h2>
+    <p id="selectedProductText" style="text-align:center;"></p>
+    
+    <div class="form-group">
+      <label for="name">আপনার নাম:</label>
+      <input type="text" id="name" required aria-required="true" placeholder="আপনার নাম লিখুন">
+    </div>
+    
+    <div class="form-group">
+      <label for="phone">মোবাইল নম্বর:</label>
+      <input type="tel" id="phone" required aria-required="true" placeholder="01XXXXXXXXX">
+    </div>
+    
+    <div class="form-group">
+      <label for="quantity">পরিমাণ:</label>
+      <select id="quantity">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="address">ঠিকানা (যদি প্রয়োজন হয়):</label>
+      <input type="text" id="address" placeholder="আপনার ঠিকানা লিখুন">
+    </div>
+    
+    <button class="submit-btn" onclick="submitOrder()">অর্ডার কনফার্ম করুন</button>
+    
+    <p style="text-align:center; margin-top:20px; color:#e91e63;">
+      পেমেন্ট নম্বর: <b>01339221633</b> (bKash/Nagad)
+    </p>
+  </div>
+
+  <div id="quickViewModal" class="modal">
+    <div class="modal-content">
+      <h3 id="quickViewTitle"></h3>
+      <p id="quickViewDescription"></p>
+      <p id="quickViewPrice"></p>
+      <button class="order-btn" id="quickViewOrderBtn">অর্ডার করুন</button>
+      <button onclick="closeQuickView()">বন্ধ করুন</button>
+    </div>
+  </div>
+
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <h3>অর্ডার সফলভাবে জমা দেওয়া হয়েছে!</h3>
+      <p>আমরা আপনার অর্ডারটি শীঘ্রই প্রসেস করব। আপনার সাথে হোয়াটসঅ্যাপে যোগাযোগ করা হবে।</p>
+      <button onclick="closeModal()">ঠিক আছে</button>
+    </div>
+  </div>
+
+  <a href="https://wa.me/8801709288934" class="whatsapp-float" target="_blank" aria-label="হোয়াটসঅ্যাপে যোগাযোগ করুন">
+    💬
+  </a>
+
+  <div class="footer">
+    <p>যোগাযোগ: 01339221633 | ইমেইল: samart@example.com</p>
+    <p>
+      <a href="https://facebook.com" target="_blank">ফেসবুক</a> |
+      <a href="https://instagram.com" target="_blank">ইনস্টাগ্রাম</a> |
+      <a href="https://wa.me/8801709288934" target="_blank">হোয়াটসঅ্যাপ</a>
+    </p>
+    <p>&copy; 2025 SA Mart. সর্বস্বত্ব সংরক্ষিত।</p>
+  </div>
+
+  <script>
+    let selectedProduct = '';
+    let selectedPrice = 0;
+
+    function showForm(product, price) {
+      selectedProduct = product;
+      selectedPrice = price;
+      document.getElementById('selectedProductText').innerHTML = 
+        `<b>পণ্য:</b> ${product} | <b>মূল্য:</b> ৳${price}`;
+      document.getElementById('paymentForm').style.display = 'block';
+      window.scrollTo({
+        top: document.getElementById('paymentForm').offsetTop,
+        behavior: 'smooth'
+      });
+      document.getElementById('name').focus();
+    }
+
+    function showQuickView(product, price, description) {
+      document.getElementById('quickViewTitle').innerText = product;
+      document.getElementById('quickViewDescription').innerText = description;
+      document.getElementById('quickViewPrice').innerHTML = `<b>মূল্য:</b> ৳${price}`;
+      document.getElementById('quickViewOrderBtn').onclick = () => showForm(product, price);
+      document.getElementById('quickViewModal').style.display = 'flex';
+    }
+
+    function closeQuickView() {
+      document.getElementById('quickViewModal').style.display = 'none';
+    }
+
+    function validatePhone(phone) {
+      const phoneRegex = /^01[3-9]\d{8}$/;
+      return phoneRegex.test(phone);
+    }
+
+    function submitOrder() {
+      const submitBtn = document.querySelector('.submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const quantity = document.getElementById('quantity').value;
+      const address = document.getElementById('address').value.trim();
+      
+      if (!name) {
+        alert('দয়া করে আপনার নাম লিখুন।');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        document.getElementById('name').focus();
+        return;
+      }
+      
+      if (!phone || !validatePhone(phone)) {
+        alert('দয়া করে সঠিক মোবাইল নম্বর লিখুন (01XXXXXXXXX ফরম্যাটে)।');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        document.getElementById('phone').focus();
+        return;
+      }
+      
+      const totalPrice = selectedPrice * quantity;
+      const message = `নতুন অর্ডার!%0A%0Aপণ্য: ${selectedProduct}%0Aমূল্য: ৳${selectedPrice}%0Aপরিমাণ: ${quantity}%0Aমোট মূল্য: ৳${totalPrice}%0Aনাম: ${name}%0Aমোবাইল: ${phone}%0Aঠিকানা: ${address || 'N/A'}%0Aপেমেন্ট নম্বর: 01339221633`;
+      
+      setTimeout(() => {
+        window.open(`https://wa.me/8801709288934?text=${message}`, '_blank');
+        
+        // Show confirmation modal
+        document.getElementById('confirmationModal').style.display = 'flex';
+        
+        // Reset form
+        document.getElementById('paymentForm').style.display = 'none';
+        document.getElementById('name').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('quantity').value = '1';
+        document.getElementById('address').value = '';
+        
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      }, 1000); // Simulate loading
+    }
+
+    function closeModal() {
+      document.getElementById('confirmationModal').style.display = 'none';
+    }
+  </script>
+
+</body>
+  </html>
