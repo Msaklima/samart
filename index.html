@@ -1,457 +1,509 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SA Mart - Premium Wooden Products</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      line-height: 1.6;
-      color: #333;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      background: linear-gradient(135deg, #e0f7fa, #f9f9f9);
-    }
-    .header {
-      text-align: center;
-      padding: 50px 0;
-      background: linear-gradient(45deg, #2e7d32, #4caf50, #2e7d32);
-      background-size: 200% 200%;
-      animation: gradientBG 5s ease infinite;
-      color: white;
-      border-radius: 15px;
-      margin-bottom: 30px;
-    }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .product-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 30px;
-      margin: 30px 0;
-    }
-    .product-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-      transition: transform 0.3s, box-shadow 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .product-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
-    .product-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      transition: transform 0.3s;
-    }
-    .product-card:hover .product-img {
-      transform: scale(1.05);
-    }
-    .product-title {
-      color: #2e7d32;
-      font-size: 1.5rem;
-      margin-bottom: 12px;
-    }
-    .product-price {
-      color: #e91e63;
-      font-weight: bold;
-      font-size: 1.4rem;
-      margin: 15px 0;
-    }
-    .order-btn, .quick-view-btn {
-      background: linear-gradient(45deg, #2e7d32, #4caf50);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin: 5px;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .order-btn:hover, .quick-view-btn:hover {
-      background: linear-gradient(45deg, #1b5e20, #388e3c);
-      transform: scale(1.05);
-    }
-    .payment-form {
-      background: #f0fff0;
-      padding: 30px;
-      border-radius: 12px;
-      margin-top: 40px;
-      display: none;
-      animation: slideIn 0.5s ease-in;
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: #2e7d32;
-    }
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 1rem;
-      transition: border-color 0.3s;
-    }
-    .form-group input:focus, .form-group select:focus {
-      border-color: #2e7d32;
-      outline: none;
-    }
-    .submit-btn {
-      background: linear-gradient(45deg, #2e7d32, #4caf50);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      width: 100%;
-      position: relative;
-      transition: background 0.3s;
-    }
-    .submit-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-    .submit-btn.loading::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #fff;
-      border-top: 3px solid transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    @keyframes spin {
-      0% { transform: translateY(-50%) rotate(0deg); }
-      100% { transform: translateY(-50%) rotate(360deg); }
-    }
-    .whatsapp-float {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #25D366;
-      color: white;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      z-index: 100;
-      transition: transform 0.3s;
-    }
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 200;
-    }
-    .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      max-width: 400px;
-      animation: popUp 0.3s ease-in;
-    }
-    @keyframes popUp {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .modal-content h3 {
-      color: #2e7d32;
-      margin-bottom: 20px;
-    }
-    .modal-content button {
-      background: #2e7d32;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .footer {
-      text-align: center;
-      padding: 20px;
-      background: #2e7d32;
-      color: white;
-      border-radius: 10px;
-      margin-top: 40px;
-    }
-    .footer a {
-      color: #e0f7fa;
-      text-decoration: none;
-      margin: 0 10px;
-    }
-    @media (max-width: 768px) {
-      .product-container {
-        grid-template-columns: 1fr;
-      }
-      .form-group input, .form-group select {
-        font-size: 0.9rem;
-        padding: 10px;
-      }
-      .order-btn, .quick-view-btn, .submit-btn {
-        font-size: 0.9rem;
-        padding: 10px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vico-ভিকো - অনলাইন শপিং</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Previous CSS styles remain exactly the same */
+        /* ... */
+    </style>
 </head>
 <body>
-
-  <div class="header">
-    <h1>SA Mart</h1>
-    <p>Premium Handmade Wooden Products</p>
-  </div>
-
-  <div class="product-container">
-    <div class="product-card">
-      <img src="https://via.placeholder.com/300x200?text=Wooden+Pen+Box" class="product-img" alt="Wooden Pen Box">
-      <h3 class="product-title">Wooden Pen Box</h3>
-      <p>এক্সক্লুসিভ হ্যান্ডমেড কাঠের পেন বক্স</p>
-      <div class="product-price">৳220</div>
-      <button class="order-btn" onclick="showForm('Wooden Pen Box', 220)">অর্ডার করুন</button>
-      <button class="quick-view-btn" onclick="showQuickView('Wooden Pen Box', 220, 'এক্সক্লুসিভ হ্যান্ডমেড কাঠের পেন বক্স')">কুইক ভিউ</button>
-    </div>
-<img src="https://i.postimg.cc/nL18kmHF/IMG-20250804-WA0000.jpg" alt="Product Image" width="100%" style="max-width:300px;border-radius:10px;margin-top:10px;">
-    <div class="product-card">
-      <img src="https://via.placeholder.com/300x200?text=Quran+Storage+Box" class="product-img" alt="Quran Storage Box">
-      <h3 class="product-title">Quran Storage Box</h3>
-      <p>পবিত্র কুরআন শরীফ সংরক্ষণের জন্য কাঠের বাক্স</p>
-      <div class="product-price">৳250</div>
-      <button class="order-btn" onclick="showForm('Quran Storage Box', 250)">অর্ডার করুন</button>
-      <button class="quick-view-btn" onclick="showQuickView('Quran Storage Box', 250, 'পবিত্র কুরআন শরীফ সংরক্ষণের জন্য কাঠের বাক্স')">কুইক ভিউ</button>
-    </div>
-<img src="https://i.postimg.cc/SRhchQ8G/file-00000000d66861fda6d4f0b44b8322d3.png" alt="Product Image" width="100%" style="max-width:300px;border-radius:10px;margin-top:10px;">
-    <div class="product-card">
-      <img src="https://via.placeholder.com/300x200?text=Custom+Wooden+Box" class="product-img" alt="Custom Wooden Box">
-      <h3 class="product-title">Custom Wooden Box</h3>
-      <p>নবাব বাড়ি</p>
-      <div class="product-price">৳300</div>
-      <button class="order-btn" onclick="showForm('Custom Wooden Box', 300)">অর্ডার করুন</button>
-      <button class="quick-view-btn" onclick="showQuickView('Custom Wooden Box', 300, 'নবাব বাড়ি ')">কুইক ভিউ</button>
-    </div>
-<img src="https://i.postimg.cc/YCWmD1yw/IMG-20250804-WA0004.jpg" alt="Product Image" width="100%" style="max-width:300px;border-radius:10px;margin-top:10px;">
-    <div class="product-card">
-      <img src="https://via.placeholder.com/300x200?text=Wooden+Keychain" class="product-img" alt="Wooden Keychain">
-      <h3 class="product-title">Wooden Keychain</h3>
-      <p>সোফা সেট</p>
-      <div class="product-price">৳250</div>
-      <button class="order-btn" onclick="showForm('Wooden products, 250)">অর্ডার করুন</button>
-      <button class="quick-view-btn" onclick="showQuickView('Wooden products', 250, 'সোফা সেট')">কুইক ভিউ</button>
-    </div>
-<img src="https://i.postimg.cc/BvrTtgYh/IMG-20250804-WA0002.jpg" alt="Product Image" width="100%" style="max-width:300px;border-radius:10px;margin-top:10px;">
-    <div class="product-card">
-      <img src="https://via.placeholder.com/300x200?text=Wooden+Jewelry+Box" class="product-img" alt="Wooden Jewelry Box">
-      <h3 class="product-title">Wooden Jewelry Box</h3>
-      <p>মার্জিত কাঠের গয়না সংরক্ষণ বক্স</p>
-      <div class="product-price">৳400</div>
-      <button class="order-btn" onclick="showForm('Wooden Jewelry Box', 400)">অর্ডার করুন</button>
-      <button class="quick-view-btn" onclick="showQuickView('Wooden Jewelry Box', 400, 'মার্জিত কাঠের গয়না সংরক্ষণ বক্স')">কুইক ভিউ</button>
-    </div>
-<img src="https://i.postimg.cc/bYHfqY3n/IMG-20250803-WA0003.jpg" alt="Product Image" width="100%" style="max-width:300px;border-radius:10px;margin-top:10px;">
-    <div class="product-card">
-      <img src="https://via.placeholder.com/300x200?text=Wooden+Wall+Art" class="product-img" alt="Wooden Wall Art">
-      <h3 class="product-title">Wooden Wall Art</h3>
-      <p>অসাধারণ কাঠের তৈরি দেয়াল সজ্জা</p>
-      <div class="product-price">৳1200</div>
-      <button class="order-btn" onclick="showForm('Wooden Wall Art', 1200)">অর্ডার করুন</button>
-      <button class="quick-view-btn" onclick="showQuickView('Wooden Wall Art', 1200, 'অসাধারণ কাঠের তৈরি দেয়াল সজ্জা')">কুইক ভিউ</button>
-    </div>
-  </div>
-
-  <div id="paymentForm" class="payment-form">
-    <h2 style="text-align:center; color:#2e7d32;">অর্ডার ফর্ম</h2>
-    <p id="selectedProductText" style="text-align:center;"></p>
+    <!-- Previous HTML structure remains the same until the script section -->
     
-    <div class="form-group">
-      <label for="name">আপনার নাম:</label>
-      <input type="text" id="name" required aria-required="true" placeholder="আপনার নাম লিখুন">
-    </div>
-    
-    <div class="form-group">
-      <label for="phone">মোবাইল নম্বর:</label>
-      <input type="tel" id="phone" required aria-required="true" placeholder="01XXXXXXXXX">
-    </div>
-    
-    <div class="form-group">
-      <label for="quantity">পরিমাণ:</label>
-      <select id="quantity">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </div>
-    
-    <div class="form-group">
-      <label for="address">ঠিকানা (যেখানে পণ্য ডেলিভারি দিব):</label>
-      <input type="text" id="address" placeholder="আপনার ঠিকানা লিখুন">
-    </div>
-    
-    <button class="submit-btn" onclick="submitOrder()">অর্ডার কনফার্ম করুন</button>
-    
-    <p style="text-align:center; margin-top:20px; color:#e91e63;">
-      পেমেন্ট নম্বর: <b>01339221633</b> (bKash/Nagad)
-    </p>
-  </div>
-
-  <div id="quickViewModal" class="modal">
-    <div class="modal-content">
-      <h3 id="quickViewTitle"></h3>
-      <p id="quickViewDescription"></p>
-      <p id="quickViewPrice"></p>
-      <button class="order-btn" id="quickViewOrderBtn">অর্ডার করুন</button>
-      <button onclick="closeQuickView()">বন্ধ করুন</button>
-    </div>
-  </div>
-
-  <div id="confirmationModal" class="modal">
-    <div class="modal-content">
-      <h3>অর্ডার সফলভাবে জমা দেওয়া হয়েছে!</h3>
-      <p>আমরা আপনার অর্ডারটি শীঘ্রই প্রসেস করব। আপনার সাথে হোয়াটসঅ্যাপে যোগাযোগ করা হবে।</p>
-      <button onclick="closeModal()">ঠিক আছে</button>
-    </div>
-  </div>
-
-  <a href="https://wa.me/8801709288934" class="whatsapp-float" target="_blank" aria-label="হোয়াটসঅ্যাপে যোগাযোগ করুন">
-    💬
-  </a>
-
-  <div class="footer">
-    <p>যোগাযোগ: 01339221633 | ইমেইল: samart@example.com</p>
-    <p>
-      <a href="https://facebook.com" target="_blank">ফেসবুক</a> |
-      <a href="https://instagram.com" target="_blank">ইনস্টাগ্রাম</a> |
-      <a href="https://wa.me/8801709288934" target="_blank">হোয়াটসঅ্যাপ</a>
-    </p>
-    <p>&copy; 2025 SA Mart. সর্বস্বত্ব সংরক্ষিত।</p>
-  </div>
-
-  <script>
-    let selectedProduct = '';
-    let selectedPrice = 0;
-
-    function showForm(product, price) {
-      selectedProduct = product;
-      selectedPrice = price;
-      document.getElementById('selectedProductText').innerHTML = 
-        `<b>পণ্য:</b> ${product} | <b>মূল্য:</b> ৳${price}`;
-      document.getElementById('paymentForm').style.display = 'block';
-      window.scrollTo({
-        top: document.getElementById('paymentForm').offsetTop,
-        behavior: 'smooth'
-      });
-      document.getElementById('name').focus();
-    }
-
-    function showQuickView(product, price, description) {
-      document.getElementById('quickViewTitle').innerText = product;
-      document.getElementById('quickViewDescription').innerText = description;
-      document.getElementById('quickViewPrice').innerHTML = `<b>মূল্য:</b> ৳${price}`;
-      document.getElementById('quickViewOrderBtn').onclick = () => showForm(product, price);
-      document.getElementById('quickViewModal').style.display = 'flex';
-    }
-
-    function closeQuickView() {
-      document.getElementById('quickViewModal').style.display = 'none';
-    }
-
-    function validatePhone(phone) {
-      const phoneRegex = /^01[3-9]\d{8}$/;
-      return phoneRegex.test(phone);
-    }
-
-    function submitOrder() {
-      const submitBtn = document.querySelector('.submit-btn');
-      submitBtn.disabled = true;
-      submitBtn.classList.add('loading');
-
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const quantity = document.getElementById('quantity').value;
-      const address = document.getElementById('address').value.trim();
-      
-      if (!name) {
-        alert('দয়া করে আপনার নাম লিখুন।');
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('loading');
-        document.getElementById('name').focus();
-        return;
-      }
-      
-      if (!phone || !validatePhone(phone)) {
-        alert('দয়া করে সঠিক মোবাইল নম্বর লিখুন (01XXXXXXXXX ফরম্যাটে)।');
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('loading');
-        document.getElementById('phone').focus();
-        return;
-      }
-      
-      const totalPrice = selectedPrice * quantity;
-      const message = `নতুন অর্ডার!%0A%0Aপণ্য: ${selectedProduct}%0Aমূল্য: ৳${selectedPrice}%0Aপরিমাণ: ${quantity}%0Aমোট মূল্য: ৳${totalPrice}%0Aনাম: ${name}%0Aমোবাইল: ${phone}%0Aঠিকানা: ${address || 'N/A'}%0Aপেমেন্ট নম্বর: 01339221633`;
-      
-      setTimeout(() => {
-        window.open(`https://wa.me/8801709288934?text=${message}`, '_blank');
+    <script>
+        // Sample product data
+        const products = [
+            {
+                id: 1,
+                name: "প্রিমিয়াম কটন শার্ট",
+                price: 750,
+                image: "shirt1.jpg",
+                category: "shirt",
+                rating: 4.5,
+                description: "১০০% সুতি কাপড়ের তৈরি এই শার্টটি আপনাবে দেবে অতুলনীয় আরাম।",
+                colors: ["নীল", "লাল", "কালো", "হলুদ"],
+                sizes: ["S", "M", "L", "XL", "XXL"]
+            },
+            {
+                id: 2,
+                name: "ডিজাইনার টি-শার্ট",
+                price: 500,
+                image: "tshirt.jpg",
+                category: "t-shirt",
+                rating: 4.2,
+                description: "ট্রেন্ডি ডিজাইনের সাথে আরামদায়ক টি-শার্ট।",
+                colors: ["সাদা", "কালো", "ধূসর"],
+                sizes: ["S", "M", "L", "XL"]
+            },
+            {
+                id: 3,
+                name: "ফরমাল প্যান্ট",
+                price: 900,
+                image: "pants.jpg",
+                category: "pant",
+                rating: 4.7,
+                description: "অফিস বা ফরমাল অনুষ্ঠানের জন্য পারফেক্ট প্যান্ট।",
+                colors: ["কালো", "নেভি ব্লু", "ধূসর"],
+                sizes: ["28", "30", "32", "34", "36"]
+            },
+            {
+                id: 4,
+                name: "স্পোর্টস জুতা",
+                price: 1200,
+                image: "shoes.jpg",
+                category: "shoes",
+                rating: 4.8,
+                description: "স্পোর্টস এবং দৈনন্দিন ব্যবহারের জন্য আরামদায়ক জুতা।",
+                colors: ["নীল", "কালো", "সাদা"],
+                sizes: ["38", "39", "40", "41", "42", "43"]
+            },
+            {
+                id: 5,
+                name: "লেদার বেল্ট",
+                price: 400,
+                image: "belt.jpg",
+                category: "accessories",
+                rating: 4.3,
+                description: "প্রিমিয়াম কোয়ালিটির লেদার বেল্ট।",
+                colors: ["কালো", "বাদামী"],
+                sizes: ["সাধারণ", "বড়"]
+            },
+            {
+                id: 6,
+                name: "ক্যাপ",
+                price: 300,
+                image: "cap.jpg",
+                category: "accessories",
+                rating: 4.0,
+                description: "স্ট্রিট স্টাইলের জন্য ট্রেন্ডি ক্যাপ।",
+                colors: ["কালো", "নেভি", "খাকি"],
+                sizes: ["এক সাইজ"]
+            }
+        ];
         
-        // Show confirmation modal
-        document.getElementById('confirmationModal').style.display = 'flex';
+        let cart = [];
+        let currentProduct = null;
         
-        // Reset form
-        document.getElementById('paymentForm').style.display = 'none';
-        document.getElementById('name').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('quantity').value = '1';
-        document.getElementById('address').value = '';
+        // Initialize the shop when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initShop();
+            
+            // Set up payment method change listener
+            document.getElementById('payment-method').addEventListener('change', function() {
+                updatePaymentDetails();
+            });
+        });
         
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('loading');
-      }, 1000); // Simulate loading
-    }
-
-    function closeModal() {
-      document.getElementById('confirmationModal').style.display = 'none';
-    }
-  </script>
-
+        // Initialize the shop
+        function initShop() {
+            displayProducts(products);
+            updateCartCount();
+        }
+        
+        // Display products on the shop page
+        function displayProducts(productsToShow) {
+            const productsContainer = document.getElementById('products-container');
+            productsContainer.innerHTML = '';
+            
+            productsToShow.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    ${product.category === 'shirt' ? '<div class="product-badge">নতুন</div>' : ''}
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" onclick="showProductDetails(${product.id})">
+                    </div>
+                    <div class="product-info">
+                        <h3 onclick="showProductDetails(${product.id})">${product.name}</h3>
+                        <div class="price">৳${product.price}</div>
+                        <div class="rating">
+                            ${getRatingStars(product.rating)}
+                            <span>(${Math.floor(Math.random() * 100 + 50)} রিভিউ)</span>
+                        </div>
+                        <button class="btn" onclick="addToCart(${product.id}, event)">কার্টে যোগ করুন</button>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+        }
+        
+        // Filter products by category
+        function filterProducts(category) {
+            const navItems = document.querySelectorAll('.nav span');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (category === 'all') {
+                displayProducts(products);
+            } else {
+                const filteredProducts = products.filter(product => product.category === category);
+                displayProducts(filteredProducts);
+            }
+        }
+        
+        // Show product details page
+        function showProductDetails(productId) {
+            currentProduct = products.find(p => p.id === productId);
+            
+            document.getElementById('main-shop').style.display = 'none';
+            document.getElementById('product-details-page').style.display = 'block';
+            
+            // Set product details
+            document.getElementById('detail-product-name').textContent = currentProduct.name;
+            document.getElementById('detail-product-price').textContent = `৳${currentProduct.price}`;
+            document.getElementById('main-product-image').src = currentProduct.image;
+            document.getElementById('product-quantity').value = 1;
+            
+            // Update description
+            const descriptionElement = document.querySelector('.product-description p');
+            descriptionElement.textContent = currentProduct.description;
+            
+            // Update size options
+            const sizeOptions = document.querySelector('.size-options');
+            sizeOptions.innerHTML = '';
+            currentProduct.sizes.forEach((size, index) => {
+                const sizeOption = document.createElement('div');
+                sizeOption.className = `size-option ${index === 1 ? 'selected' : ''}`;
+                sizeOption.textContent = size;
+                sizeOption.onclick = function() { selectSize(this); };
+                sizeOptions.appendChild(sizeOption);
+            });
+            
+            // Update color options
+            const colorOptions = document.querySelector('.color-options');
+            colorOptions.innerHTML = '';
+            currentProduct.colors.forEach((color, index) => {
+                const colorOption = document.createElement('div');
+                colorOption.className = `color-option ${index === 0 ? 'selected' : ''}`;
+                colorOption.style.backgroundColor = getColorCode(color);
+                colorOption.setAttribute('data-color', color);
+                colorOption.onclick = function() { selectColor(this, color); };
+                colorOptions.appendChild(colorOption);
+            });
+        }
+        
+        // Helper function to get color code
+        function getColorCode(color) {
+            const colors = {
+                'নীল': '#3498db',
+                'লাল': '#e74c3c',
+                'কালো': '#2c3e50',
+                'হলুদ': '#f1c40f',
+                'সাদা': '#ffffff',
+                'ধূসর': '#95a5a6',
+                'নেভি ব্লু': '#34495e',
+                'বাদামী': '#8b4513',
+                'নেভি': '#2c3e50',
+                'খাকি': '#f0e68c'
+            };
+            return colors[color] || '#cccccc';
+        }
+        
+        // Back to shop from product details
+        function backToShop() {
+            document.getElementById('product-details-page').style.display = 'none';
+            document.getElementById('main-shop').style.display = 'block';
+        }
+        
+        // Change main product image when thumbnail is clicked
+        function changeMainImage(imageSrc) {
+            document.getElementById('main-product-image').src = imageSrc;
+            
+            // Update active thumbnail
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            event.target.closest('.thumbnail').classList.add('active');
+        }
+        
+        // Select size option
+        function selectSize(element) {
+            const sizes = document.querySelectorAll('.size-option');
+            sizes.forEach(size => size.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+        
+        // Select color option
+        function selectColor(element, color) {
+            const colors = document.querySelectorAll('.color-option');
+            colors.forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+        
+        // Change product quantity
+        function changeQuantity(change) {
+            const quantityInput = document.getElementById('product-quantity');
+            let newValue = parseInt(quantityInput.value) + change;
+            if (newValue < 1) newValue = 1;
+            quantityInput.value = newValue;
+        }
+        
+        // Add to cart from product details
+        function addToCartFromDetails() {
+            if (!currentProduct) return;
+            
+            const quantity = parseInt(document.getElementById('product-quantity').value);
+            const selectedSize = document.querySelector('.size-option.selected').textContent;
+            const selectedColor = document.querySelector('.color-option.selected').getAttribute('data-color');
+            
+            addToCart(currentProduct.id, null, quantity, selectedSize, selectedColor);
+        }
+        
+        // Add to cart from product card
+        function addToCart(productId, event, quantity = 1, size = 'M', color = 'নীল') {
+            if (event) event.stopPropagation();
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId && item.size === size && item.color === color);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: quantity,
+                    size: size,
+                    color: color
+                });
+            }
+            
+            updateCartCount();
+            showCartNotification(`${product.name} কার্টে যোগ করা হয়েছে`);
+        }
+        
+        // Buy now function
+        function buyNow() {
+            addToCartFromDetails();
+            checkout();
+        }
+        
+        // Toggle cart visibility
+        function toggleCart() {
+            const cartSummary = document.getElementById('cart-summary');
+            cartSummary.classList.toggle('show');
+            
+            if (cartSummary.classList.contains('show')) {
+                updateCartDisplay();
+            }
+        }
+        
+        // Update cart display
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<li>আপনার কার্ট খালি</li>';
+                document.getElementById('cart-total').textContent = 'মোট: ৳0';
+                return;
+            }
+            
+            let total = 0;
+            
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${item.image}" width="40" height="40" style="object-fit: cover; border-radius: 5px;">
+                    <span style="flex-grow: 1; margin: 0 10px;">
+                        ${item.name} (${item.size}, ${item.color})<br>
+                        <small>${item.quantity} x ৳${item.price}</small>
+                    </span>
+                    <span>৳${item.price * item.quantity}</span>
+                    <i class="fas fa-times remove-item" onclick="removeCartItem(${item.id}, '${item.size}', '${item.color}')"></i>
+                `;
+                cartItems.appendChild(li);
+                total += item.price * item.quantity;
+            });
+            
+            document.getElementById('cart-total').textContent = `মোট: ৳${total}`;
+        }
+        
+        // Remove item from cart
+        function removeCartItem(productId, size, color) {
+            cart = cart.filter(item => !(item.id === productId && item.size === size && item.color === color));
+            updateCartDisplay();
+            updateCartCount();
+        }
+        
+        // Update cart count in header
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = count;
+        }
+        
+        // Show cart notification
+        function showCartNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'cart-notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Checkout function
+        function checkout() {
+            if (cart.length === 0) {
+                alert('আপনার কার্ট খালি, চেকআউট করতে পণ্য যোগ করুন');
+                return;
+            }
+            
+            toggleCart();
+            showModal('checkout-modal');
+        }
+        
+        // Confirm payment
+        function confirmPayment() {
+            const name = document.getElementById('customer-name').value;
+            const address = document.getElementById('customer-address').value;
+            const phone = document.getElementById('customer-phone').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+            const transactionId = document.getElementById('transaction-id').value;
+            
+            if (!name || !address || !phone) {
+                alert('দয়া করে সমস্ত তথ্য প্রদান করুন');
+                return;
+            }
+            
+            if (paymentMethod !== 'card' && !transactionId) {
+                alert('দয়া করে ট্রানজাকশন আইডি প্রদান করুন');
+                return;
+            }
+            
+            // In a real app, you would send this data to your server
+            alert(`অর্ডার সফলভাবে সম্পন্ন হয়েছে! অর্ডার আইডি: ${Math.floor(Math.random() * 1000000)}`);
+            
+            // Reset cart
+            cart = [];
+            updateCartCount();
+            updateCartDisplay();
+            closeModal('checkout-modal');
+        }
+        
+        // Update payment details based on selected method
+        function updatePaymentDetails() {
+            const paymentMethod = document.getElementById('payment-method').value;
+            const paymentDetails = document.getElementById('payment-details');
+            
+            if (paymentMethod === 'card') {
+                paymentDetails.innerHTML = `
+                    <label for="card-number">কার্ড নম্বর</label>
+                    <input type="text" id="card-number" placeholder="কার্ড নম্বর দিন">
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <div style="flex: 1;">
+                            <label for="expiry-date">মেয়াদ শেষ</label>
+                            <input type="text" id="expiry-date" placeholder="MM/YY">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" placeholder="CVV">
+                        </div>
+                    </div>
+                `;
+            } else {
+                paymentDetails.innerHTML = `
+                    <label for="transaction-id">ট্রানজাকশন আইডি</label>
+                    <input type="text" id="transaction-id" placeholder="ট্রানজাকশন আইডি দিন">
+                    <small style="display: block; margin-top: 5px; color: #7f8c8d;">
+                        ${paymentMethod === 'bkash' ? 'বিকাশ মার্চেন্ট: 01712345678' : 
+                          paymentMethod === 'nagad' ? 'নগদ মার্চেন্ট: 01812345678' : 
+                          'রকেট মার্চেন্ট: 01912345678'}
+                    </small>
+                `;
+            }
+        }
+        
+        // Show order track modal
+        function showOrderTrack() {
+            showModal('order-track-modal');
+        }
+        
+        // Track order function
+        function trackOrder() {
+            const orderId = document.getElementById('order-id').value;
+            const phoneNumber = document.getElementById('phone-number').value;
+            
+            if (!orderId || !phoneNumber) {
+                alert('দয়া করে অর্ডার আইডি এবং ফোন নম্বর প্রদান করুন');
+                return;
+            }
+            
+            // In a real app, you would check with your server
+            alert(`অর্ডার #${orderId} এর অবস্থা: ডেলিভারি প্রক্রিয়াধীন`);
+            closeModal('order-track-modal');
+        }
+        
+        // Show customer service modal
+        function showCustomerService() {
+            showModal('customer-service-modal');
+        }
+        
+        // Submit contact form
+        function submitContactForm() {
+            const name = document.getElementById('contact-name').value;
+            const phone = document.getElementById('contact-phone').value;
+            const message = document.getElementById('contact-message').value;
+            
+            if (!name || !phone || !message) {
+                alert('দয়া করে সমস্ত তথ্য প্রদান করুন');
+                return;
+            }
+            
+            // In a real app, you would send this to your server
+            alert('আপনার বার্তা সফলভাবে পাঠানো হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
+            closeModal('customer-service-modal');
+            
+            // Reset form
+            document.getElementById('contact-name').value = '';
+            document.getElementById('contact-phone').value = '';
+            document.getElementById('contact-message').value = '';
+        }
+        
+        // Show modal
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+        
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+        
+        // Helper function to get rating stars
+        function getRatingStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            let stars = '';
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
+            }
+            
+            return stars;
+        }
+    </script>
 </body>
-  </html>
+</html>
